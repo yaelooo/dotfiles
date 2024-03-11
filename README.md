@@ -2,7 +2,7 @@
 
 This is my personal configuration for Arch Linux with Bspwm.
 
-| Images                                     |                                            |
+| Images                                     | More images                                |
 | :----------------------------------------- | :----------------------------------------- |
 | ![image1](https://i.imgur.com/QfYRBEv.png) | ![image2](https://i.imgur.com/CZKS8R5.png) |
 | ![image3](https://i.imgur.com/qchyC8U.png) | ![image4](https://i.imgur.com/39BEp05.png) |
