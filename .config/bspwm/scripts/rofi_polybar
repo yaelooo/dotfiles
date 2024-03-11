@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# Script for changing the style of polybar
+# Author: yaelooo
+
+# DON'T EDIT THIS FILE
+# IF YOU WANT TO CHANGE THE STYLE OF THE CONFIG
+# USE THE SHORTCUT KEY 'CTRL + ALT + P'
+# OR RUN MANUALLY '$HOME/.config/bspwm/scripts/polybar'
+
+# Import Current Theme
+RASI="$HOME/.config/rofi/config.rasi"
+# RASI="~/.cache/wal/colors-rofi-dark.rasi"
+
+# Theme Elements
+prompt='Select the style for polybar'
+mesg="Styles available"
+
+# List the files in $HOME/.config/bspwm/polybar/bars and asign them to the options variable withou the .ini extension
+options=$(ls $HOME/.config/bspwm/polybar/bars | sed 's/\.ini//g')
+
+# Rofi CMD
+rofi_cmd() {
+  rofi -dmenu \
+    -p "$prompt" \
+    -mesg "$mesg" \
+    -markup-rows \
+    -theme ${RASI}
+}
+
+# Pass variables to rofi dmenu
+run_rofi() {
+  echo -e "$options" | rofi_cmd
+}
+
+# Execute Command
+run_cmd() {
+  chosen_option=$1
+  # Verify if the chosen option is the same as the current config
+  if [[ $chosen_option == $(grep -oP 'config="\K[^"]*' $HOME/.config/bspwm/scripts/polybar) ]]; then
+    notify-send "Polybar" "The bar $chosen_option is the current bar"
+    exit 0
+  fi
+  # Verify if the chosen option file contain a bar structure
+  if ! grep -qP '\[bar/.*\]' $HOME/.config/bspwm/polybar/bars/$chosen_option.ini; then
+    notify-send "Polybar" "The bar $chosen_option is not a valid bar structure"
+    exit 0
+  fi
+  # Change the config in the polybar file and send a notification
+  sed -i "s/config=\".*\"/config=\"$chosen_option\"/g" $HOME/.config/bspwm/scripts/polybar
+  $HOME/.config/bspwm/scripts/polybar --change
+}
+
+# Actions
+chosen="$(run_rofi)"
+if [[ -n $chosen ]]; then
+  run_cmd "${chosen}"
+else
+  exit 0
+fi

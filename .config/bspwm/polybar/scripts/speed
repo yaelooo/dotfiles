@@ -1,0 +1,52 @@
+#!/bin/bash
+# Script for monitoring network traffic.
+# For arrow icons, i have used nerd fonts (https://www.nerdfonts.com/cheat-sheet).
+
+# Set the interval in seconds (e.g. 1 for 1 second, 5 for 5 seconds, etc.)
+# example: interval=1, interval=5, ...
+interval=1
+# Set the network interfaces to monitor (e.g. for one interface: 'eth0', for multiple interfaces: 'eth0 wlan0', etc.)
+# example: interfaces='eth0', interfaces='eth0 wlan0', ..."
+# For default, list all network interfaces
+interfaces=$(ls /sys/class/net/)
+
+declare -A bytes
+
+print_bytes() {
+    if [ "$1" -eq 0 ] || [ "$1" -lt 1000 ]; then
+        bytes="0 K"
+    elif [ "$1" -lt 1000000 ]; then
+        bytes="$(echo "$1/1000" | bc -l | LANG=C xargs printf "%.f\n") K"
+    else
+        bytes="$(echo "$1/1000000" | bc -l | LANG=C xargs printf "%.1f\n") M"
+    fi
+    echo "$bytes"
+}
+
+for interface in $interfaces; do
+    bytes[past_rx_$interface]="$(cat /sys/class/net/"$interface"/statistics/rx_bytes)"
+    bytes[past_tx_$interface]="$(cat /sys/class/net/"$interface"/statistics/tx_bytes)"
+done
+
+while true; do
+    down=0
+    up=0
+
+    for interface in $interfaces; do
+        bytes[now_rx_$interface]="$(cat /sys/class/net/"$interface"/statistics/rx_bytes)"
+        bytes[now_tx_$interface]="$(cat /sys/class/net/"$interface"/statistics/tx_bytes)"
+
+        bytes_down=$(((${bytes[now_rx_$interface]} - ${bytes[past_rx_$interface]}) / interval))
+        bytes_up=$(((${bytes[now_tx_$interface]} - ${bytes[past_tx_$interface]}) / interval))
+
+        down=$(("$down" + "$bytes_down"))
+        up=$(("$up" + "$bytes_up"))
+
+        bytes[past_rx_$interface]=${bytes[now_rx_$interface]}
+        bytes[past_tx_$interface]=${bytes[now_tx_$interface]}
+    done
+
+    echo "󰁅 $(print_bytes $down) 󰁝 $(print_bytes $up)"
+
+    sleep $interval
+done

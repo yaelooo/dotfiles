@@ -1,0 +1,188 @@
+# Sxhkd Configuration
+# Author: yaelooo
+
+##---------- Sxhkd ----------##
+# Reload sxhkd
+super + Escape
+	pkill -USR1 -x sxhkd
+
+##---------- Programs ----------##
+# Terminal
+super + Return
+	kitty
+
+# Web browser
+alt + w
+	firefox
+
+# File manager
+alt + f
+	pcmanfm
+
+# Music player
+alt + m
+	tidal-hifi
+
+# Text editor
+alt + e
+	leafpad
+
+# Image viewer
+alt + i
+	feh --scale-down --auto-zoom ~/Pictures/Wallpapers
+
+# Telegram
+alt + t
+	telegram-desktop
+
+# VSCode
+alt + v
+	code
+
+# Greenclip
+alt + c
+	rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
+
+##---------- Shortcuts ----------##
+# Screenshot fullscreen
+Print
+	maim ~/Pictures/screenshot-$(date +%d-%m-%Y-%H-%M-%S).png | xclip -selection clipboard -t image/png && notify-send "Screenshot saved and copied to clipboard"
+
+# Volume up/down/mute
+XF86Audio{RaiseVolume,LowerVolume,Mute}
+	amixer -q set Master {5%+,5%-,toggle}
+
+# Brightness up/down
+XF86MonBrightness{Up,Down}
+	xbacklight {-inc,-dec} 10
+
+# Media play/pause/next/prev
+XF86Audio{Play,Pause,Next,Prev}
+	playerctl {play-pause,play-pause,next,previous}
+
+##---------- General ----------##
+
+# Bspwm restart, quit
+super + shift + {b,q}
+	bspc {wm -r,quit}
+
+# Restart polybar
+super + shift + p
+	sh ~/.config/bspwm/scripts/polybar --restart
+
+# Select polybar style
+super + alt + p
+	sh ~/.config/bspwm/scripts/rofi_polybar
+
+# Edit settings
+super + shift + s
+	. ~/.config/bspwm/scripts/rofi_configs
+
+# # System suspend, Reboot, Shutdown
+# super + shift + {h,r,o}
+# 	systemctl {suspend,reboot,poweroff}
+
+# Lockscreen
+super + shift + x
+	betterlockscreen -l
+
+##---------- Rofi ----------##
+# Rofi Applets
+super + {b,m,r}
+	{rofi_bluetooth,rofi_music,rofi_asroot}
+
+# Rofi Menu Power
+super + space
+	. ~/.config/bspwm/scripts/rofi_powermenu
+
+# Rofi App Launcher
+alt + d
+	rofi -show drun
+
+# Rofi Run
+super + r
+	rofi_runner
+	
+# Menu Screenshots
+super + i
+	rofi_screenshot
+
+# Wifi Menu
+#nmd
+super + w
+	rofi_wifi
+# st -e nmtui
+
+##---------- Bspwm ----------##
+# Close/kill node
+super + {_,shift + } z
+	bspc node {-c,-k}
+
+# Node to desktop
+## Send node to another desktop with focused
+super + shift + {1-9}
+	bspc node -d {1-9} --follow
+
+## Send node to another desktop without focused
+super + ctrl + {1-9}
+	bspc node -d {1-9}
+
+## Send node to last desktop with/without focused
+super + {shift,ctrl} + 0
+	bspc node -d last {--follow,''}
+
+# Node states
+## Toggle between floating & tiled
+super + s
+	bspc node -t "~"{floating,tiled}
+
+## Toggle between fullscreen & tiled
+super + f
+    bspc node -t "~"{fullscreen,tiled}
+
+## Toggle between pseudo_tiled & last state
+super + d
+	bspc node -t "~"pseudo_tiled
+
+# Node flags
+## Toggle hidden/sticky/private/locked
+super + {h,a,p,l}
+	bspc node -g {hidden,sticky,private,locked}
+
+# Node focus
+super + {Left,Down,Up,Right}
+	bspc node -f {west,south,north,east}
+
+# Node move
+super + alt + shift + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# Node swap
+super + shift + {Left,Down,Up,Right}
+	bspc node -s {west,south,north,east}
+
+# Node resize
+## Expand
+super + ctrl + {Left,Down,Up,Right}
+	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+## Contract
+super + alt + {Left,Down,Up,Right}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# Node presel-dir
+# ## Preselect the direction of the split/cancel
+# super + alt + {Left,Down,Up,Right,c}
+# 	bspc node -p {west,south,north,east,cancel}
+
+# Desktop focus
+super + {1-9}
+	bspc desktop -f {1-9}
+
+# Switch focus to last desktop/node
+{super,alt} + Tab
+	bspc {desktop,node} -f last
+
+# Desktop layout
+super + q
+	bspc desktop -l next

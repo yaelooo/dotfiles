@@ -1,0 +1,5 @@
+/* Dark theme. */
+@import "~/.cache/wal/colors-rofi-dark.rasi"
+
+/* Light theme. */
+@import "~/.cache/wal/colors-rofi-light.rasi"

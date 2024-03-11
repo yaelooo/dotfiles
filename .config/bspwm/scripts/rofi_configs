@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+# Import Current Theme
+RASI="$HOME/.config/rofi/config.rasi"
+
+# Theme Elements
+prompt='Select configuration file'
+mesg="Edit configuration file"
+term='kitty'
+
+# Options
+option_1="bspwmrc"
+option_2="sxhkdrc"
+option_3="polybar"
+option_4="picom"
+
+# Rofi CMD
+rofi_cmd() {
+	rofi -dmenu \
+		-p "$prompt" \
+		-mesg "$mesg" \
+		-markup-rows \
+		-theme ${RASI}
+}
+
+# Pass variables to rofi dmenu
+run_rofi() {
+	echo -e "$option_1\n$option_2\n$option_3\n$option_4" | rofi_cmd
+}
+
+# Execute Command
+run_cmd() {
+	if [[ "$1" == '--opt1' ]]; then
+		code ~/.config/bspwm/bspwmrc
+	elif [[ "$1" == '--opt2' ]]; then
+		code ~/.config/bspwm/sxhkdrc
+	elif [[ "$1" == '--opt3' ]]; then
+		code ~/.config/bspwm/polybar/config.ini
+	elif [[ "$1" == '--opt4' ]]; then
+		code ~/.config/bspwm/picom/picom.conf
+	fi
+}
+
+# Actions
+chosen="$(run_rofi)"
+case ${chosen} in
+$option_1)
+	run_cmd --opt1
+	;;
+$option_2)
+	run_cmd --opt2
+	;;
+$option_3)
+	run_cmd --opt3
+	;;
+$option_4)
+	run_cmd --opt4
+	;;
+esac

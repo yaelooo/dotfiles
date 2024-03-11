@@ -1,0 +1,63 @@
+#!/bin/sh
+# Script to check for updates and display a notification
+
+# Import colors from wal
+. "${HOME}/.cache/wal/colors.sh"
+
+# Set colors
+foreground="$foreground"
+normal="$color1"
+alert="$color3"
+
+# Check for updates for pacman
+if ! updates_arch=$(checkupdates 2>/dev/null | wc -l); then
+  updates_arch=0
+fi
+
+# Check for updates for AUR
+if ! updates_aur=$(yay -Qum 2>/dev/null | wc -l); then
+  updates_aur=0
+fi
+
+# Sum the updates
+updates=$((updates_arch + updates_aur))
+
+# Function to check internet connection
+check_internet() {
+  if ! ping -c 1 google.com >/dev/null 2>&1; then
+    echo "%{F$alert}󱙜 "
+    return 1
+  fi
+  return 0
+}
+
+# Function to display notification in polybar
+notify_update() {
+  if [ "$updates" -gt 0 ]; then
+    echo "%{F$normal}󱙝 %{F$foreground}$updates"
+  else
+    echo "%{F$normal}󱙜 "
+  fi
+}
+
+# Define the options
+case $1 in
+"--check")
+  check_internet && notify_update
+  ;;
+"--update")
+  if ! check_internet; then
+    notify-send -u critical "No internet connection"
+  else
+    if [ "$updates" -gt 0 ]; then
+      kitty kitty @ launch --title UpdateArch yay --noconfirm
+      kitty @ close-tab --match title:UpdateArch
+      notify-send -u low "System updated successfully"
+      notify_update
+    else
+      notify-send -u low "System is up to date"
+    fi
+  fi
+  ;;
+*) ;;
+esac

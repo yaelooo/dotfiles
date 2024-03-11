@@ -1,0 +1,6 @@
+#!/bin/sh
+# Script to move the current wallpaper for slick-greeter
+# Author: yaelooo
+
+wall=$(cat "$HOME"/.cache/wal/wal)
+cp "$wall" "/usr/share/wallpapers/wal"

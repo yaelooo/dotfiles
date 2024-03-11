@@ -1,0 +1,44 @@
+#!/bin/bash
+# Script to reload dunst with wal colors
+# Author: yaelooo
+
+# Import colors
+. "${HOME}/.cache/wal/colors.sh"
+
+# Define colors
+color_primary="$color1"
+color_bg="$background"
+color_fg="$foreground"
+color_alert="$color3"
+
+# Function to generate dunstrc
+generate_config() {
+  cat >~/.config/bspwm/dunstrc <<EOF
+[global]
+  width = 300
+  height = 300
+  icon_corner_radius = 5
+  separator_height = 10
+  frame_color = "$color_alert"
+  separator_color = frame
+
+[urgency_low]
+  background = "$color_bg"
+  foreground = "$color_fg"
+
+[urgency_normal]
+  background = "$color_bg"
+  foreground = "$color_fg"
+
+[urgency_critical]
+  background = "$color_bg"
+  foreground = "$color_fg"
+  frame_color = "$color_alert"
+EOF
+}
+
+# Generate dunstrc
+generate_config
+
+killall dunst
+dunst -config ~/.config/bspwm/dunstrc &
