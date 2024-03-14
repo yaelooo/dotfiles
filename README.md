@@ -4,9 +4,9 @@ This is my personal configuration for Arch Linux with Bspwm.
 
 | Images                                     | More images                                |
 | :----------------------------------------- | :----------------------------------------- |
-| ![image1](https://i.imgur.com/QfYRBEv.png) | ![image2](https://i.imgur.com/CZKS8R5.png) |
-| ![image3](https://i.imgur.com/qchyC8U.png) | ![image4](https://i.imgur.com/39BEp05.png) |
-| ![image5](https://i.imgur.com/atjiPu6.png) | ![image6](https://i.imgur.com/iBz94oR.png) |
+| ![image1](https://i.ibb.co/GJwKsZC/1.webp) | ![image2](https://i.ibb.co/JqTsxCJ/2.webp) |
+| ![image3](https://i.ibb.co/SXt4my0/3.webp) | ![image4](https://i.ibb.co/yPTBt0d/4.webp) |
+| ![image5](https://i.ibb.co/X29w6WP/5.webp) | ![image6](https://i.ibb.co/88FjNBr/6.webp) |
 
 ## To do
 
